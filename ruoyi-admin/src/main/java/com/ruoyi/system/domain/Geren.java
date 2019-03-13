@@ -90,7 +90,8 @@ public class Geren extends BaseEntity
 		return uptime;
 	}
 
-    public String toString() {
+    @Override
+	public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("name", getName())
