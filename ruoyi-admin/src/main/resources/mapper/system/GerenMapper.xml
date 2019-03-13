@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.GerenMapper">
+    
+    <resultMap type="Geren" id="GerenResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="age"    column="age"    />
+        <result property="sfz"    column="sfz"    />
+        <result property="isno"    column="isno"    />
+        <result property="uptime"    column="uptime"    />
+    </resultMap>
+	
+	<sql id="selectGerenVo">
+        select id, name, age, sfz, isno, uptime from geren
+    </sql>
+	
+    <select id="selectGerenList" parameterType="Geren" resultMap="GerenResult">
+        <include refid="selectGerenVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="age != null "> and age = #{age}</if>
+             <if test="sfz != null  and sfz != '' "> and sfz = #{sfz}</if>
+             <if test="isno != null "> and isno = #{isno}</if>
+             <if test="uptime != null "> and uptime = #{uptime}</if>
+         </where>
+    </select>
+    
+    <select id="selectGerenById" parameterType="Integer" resultMap="GerenResult">
+        <include refid="selectGerenVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGeren" parameterType="Geren">
+        insert into geren
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="age != null  ">age,</if>
+			<if test="sfz != null  and sfz != ''  ">sfz,</if>
+			<if test="isno != null  ">isno,</if>
+			<if test="uptime != null  ">uptime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="age != null  ">#{age},</if>
+			<if test="sfz != null  and sfz != ''  ">#{sfz},</if>
+			<if test="isno != null  ">#{isno},</if>
+			<if test="uptime != null  ">#{uptime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGeren" parameterType="Geren">
+        update geren
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="age != null  ">age = #{age},</if>
+            <if test="sfz != null  and sfz != ''  ">sfz = #{sfz},</if>
+            <if test="isno != null  ">isno = #{isno},</if>
+            <if test="uptime != null  ">uptime = #{uptime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGerenById" parameterType="Integer">
+        delete from geren where id = #{id}
+    </delete>
+	
+    <delete id="deleteGerenByIds" parameterType="String">
+        delete from geren where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

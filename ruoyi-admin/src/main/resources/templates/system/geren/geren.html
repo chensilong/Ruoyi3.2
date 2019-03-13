@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								姓名：<input type="text" name="name"/>
+							</li>
+
+							<li>
+								年纪：<input type="text" name="age"/>
+							</li>
+
+							<li>
+								身份证：<input type="text" name="sfz"/>
+							</li>
+
+							<li>
+								是否：<input type="text" name="isno"/>
+							</li>
+
+							<li>
+								更新时间：<input type="text" name="uptime"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:geren:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:geren:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:geren:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+                <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:geren:import">
+                    <i class="fa fa-upload"></i> 导入
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:geren:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:geren:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:geren:remove')}]];
+        var prefix = ctx + "system/geren";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                importUrl: prefix + "/importData",
+                importTemplateUrl: prefix + "/importTemplate",
+                modalName: "个人",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : 'ID',
+					visible: false
+				},
+				{
+					field : 'name', 
+					title : '姓名',
+					sortable: true
+				},
+				{
+					field : 'age', 
+					title : '年纪',
+					sortable: true
+				},
+				{
+					field : 'sfz', 
+					title : '身份证',
+					sortable: true
+				},
+				{
+					field : 'isno', 
+					title : '是否',
+					sortable: true
+				},
+				{
+					field : 'uptime', 
+					title : '更新时间',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+<form id="importForm" enctype="multipart/form-data" class="mt20 mb10" style="display: none;">
+    <div class="col-xs-offset-1">
+        <input type="file" id="file" name="file"/>
+        <div class="mt10 pt5">
+            &nbsp;	<a onclick="$.table.importTemplate()" class="btn btn-default btn-xs"><i class="fa fa-file-excel-o"></i> 下载模板</a>
+        </div>
+        <font color="red" class="pull-left mt10">
+            提示：仅允许导入“xls”或“xlsx”格式文件！
+        </font>
+    </div>
+</form>
+</html>

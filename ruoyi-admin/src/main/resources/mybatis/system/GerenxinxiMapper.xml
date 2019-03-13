@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.gerenxinxi.mapper.GerenxinxiMapper">
+    
+    <resultMap type="Gerenxinxi" id="GerenxinxiResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="nianling"    column="nianling"    />
+        <result property="xinbie"    column="xinbie"    />
+        <result property="sfz"    column="sfz"    />
+        <result property="dizhi"    column="dizhi"    />
+    </resultMap>
+	
+	<sql id="selectGerenxinxiVo">
+        select id, name, nianling, xinbie, sfz, dizhi from gerenxinxi
+    </sql>
+	
+    <select id="selectGerenxinxiList" parameterType="Gerenxinxi" resultMap="GerenxinxiResult">
+        <include refid="selectGerenxinxiVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="nianling != null  and nianling != '' "> and nianling = #{nianling}</if>
+             <if test="xinbie != null  and xinbie != '' "> and xinbie = #{xinbie}</if>
+             <if test="sfz != null  and sfz != '' "> and sfz = #{sfz}</if>
+             <if test="dizhi != null  and dizhi != '' "> and dizhi = #{dizhi}</if>
+         </where>
+    </select>
+    
+    <select id="selectGerenxinxiById" parameterType="Integer" resultMap="GerenxinxiResult">
+        <include refid="selectGerenxinxiVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGerenxinxi" parameterType="Gerenxinxi" useGeneratedKeys="true" keyProperty="id">
+        insert into gerenxinxi
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="nianling != null  and nianling != ''  ">nianling,</if>
+			<if test="xinbie != null  and xinbie != ''  ">xinbie,</if>
+			<if test="sfz != null  and sfz != ''  ">sfz,</if>
+			<if test="dizhi != null  and dizhi != ''  ">dizhi,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="nianling != null  and nianling != ''  ">#{nianling},</if>
+			<if test="xinbie != null  and xinbie != ''  ">#{xinbie},</if>
+			<if test="sfz != null  and sfz != ''  ">#{sfz},</if>
+			<if test="dizhi != null  and dizhi != ''  ">#{dizhi},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGerenxinxi" parameterType="Gerenxinxi">
+        update gerenxinxi
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="nianling != null  and nianling != ''  ">nianling = #{nianling},</if>
+            <if test="xinbie != null  and xinbie != ''  ">xinbie = #{xinbie},</if>
+            <if test="sfz != null  and sfz != ''  ">sfz = #{sfz},</if>
+            <if test="dizhi != null  and dizhi != ''  ">dizhi = #{dizhi},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGerenxinxiById" parameterType="Integer">
+        delete from gerenxinxi where id = #{id}
+    </delete>
+	
+    <delete id="deleteGerenxinxiByIds" parameterType="String">
+        delete from gerenxinxi where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
